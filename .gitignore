@@ -1,0 +1,26 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node / Dependencies (if applicable)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build / Output
+dist/
+build/
+bin/
+obj/
+
+# Environment Variables
+.env
+.env.local
