@@ -101,17 +101,17 @@ Además, el sistema se integra con servicios externos:
 
 Se ha integrado el agente **Archify** para generar un diagrama de arquitectura interactivo, responsive y exportable en formato HTML independiente con SVG vectorial.
 
-- **Visor interactivo HTML:** [arquitectura-inicial.html](file:///d:/ArqSoftware/Marketplace-arquitSoft-02-Frank/arquitectura/arquitectura-inicial.html)
-- **Especificación técnica JSON:** [arquitectura-inicial.json](file:///d:/ArqSoftware/Marketplace-arquitSoft-02-Frank/arquitectura/arquitectura-inicial.json)
-- **Reporte de validación visual:** [arquitectura-inicial.visual-check.html](file:///d:/ArqSoftware/Marketplace-arquitSoft-02-Frank/arquitectura/arquitectura-inicial.visual-check.html)
+- **Visor interactivo HTML:** [arquitectura-inicial.html](./arquitectura-inicial.html)
+- **Especificación técnica JSON:** [arquitectura-inicial.json](./arquitectura-inicial.json)
+- **Reporte de validación visual:** [arquitectura-inicial.visual-check.html](./arquitectura-inicial.visual-check.html)
 
 ### Vista previa del diagrama
 
+#### Modo Claro
+![Diagrama en modo claro](./arquitectura-inicial.visual-check.1440x900.light.png)
 
-![Diagrama en modo claro](file:///d:/ArqSoftware/Marketplace-arquitSoft-02-Frank/arquitectura/arquitectura-inicial.visual-check.1440x900.light.png) 
-
-
-![Diagrama en modo oscuro](file:///d:/ArqSoftware/Marketplace-arquitSoft-02-Frank/arquitectura/arquitectura-inicial.visual-check.1440x900.dark.png)
+#### Modo Oscuro
+![Diagrama en modo oscuro](./arquitectura-inicial.visual-check.1440x900.dark.png)
 
 ### Capacidades interactivas disponibles en el visor
 1. **Vistas guiadas (*Guided Views*):**
