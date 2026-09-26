@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura Inicial - Marketplace",
+    "output": "arquitectura-inicial.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "flujo-comprador",
+        "label": "Flujo principal del cliente",
+        "focus": ["clientes", "web_app", "mod_catalogo", "mod_carrito", "mod_pedidos", "bd", "pasarela_pago"],
+        "note": "Interacción del comprador desde la búsqueda en catálogo hasta el pago."
+      },
+      {
+        "id": "gestion-sellers",
+        "label": "Gestión de sellers y ERP",
+        "focus": ["sellers", "web_app", "mod_sellers", "mod_catalogo", "bd", "erp"],
+        "note": "Operación de vendedores y sincronización de catálogo con el sistema ERP."
+      },
+      {
+        "id": "despacho-logistica",
+        "label": "Checkout y despacho logístico",
+        "focus": ["mod_pedidos", "pasarela_pago", "servicio_envio"],
+        "note": "Procesamiento de pagos y coordinación con el servicio de entrega."
+      }
+    ]
+  },
+  "components": [
+    { "id": "clientes", "type": "external", "label": "Cliente", "sublabel": "Comprador / Web", "pos": [40, 115], "size": [130, 52] },
+    { "id": "sellers", "type": "external", "label": "Seller", "sublabel": "Vendedor / Catálogo", "pos": [40, 210], "size": [130, 52] },
+    { "id": "admin", "type": "external", "label": "Administrador", "sublabel": "Gestión Plataforma", "pos": [40, 305], "size": [130, 52] },
+
+    { "id": "web_app", "type": "frontend", "label": "Aplicación Web", "sublabel": "Portal Web & API REST", "pos": [250, 205], "size": [150, 60] },
+
+    { "id": "mod_catalogo", "type": "backend", "label": "Catálogo", "sublabel": "Productos y stock", "pos": [480, 50], "size": [130, 50] },
+    { "id": "mod_sellers", "type": "backend", "label": "Sellers", "sublabel": "Tiendas asociadas", "pos": [480, 130], "size": [130, 50] },
+    { "id": "mod_usuarios", "type": "backend", "label": "Usuarios", "sublabel": "Cuentas y perfiles", "pos": [480, 210], "size": [130, 50] },
+    { "id": "mod_carrito", "type": "backend", "label": "Carrito", "sublabel": "Sesiones de compra", "pos": [480, 290], "size": [130, 50] },
+    { "id": "mod_pedidos", "type": "backend", "label": "Pedidos", "sublabel": "Órdenes y checkout", "pos": [480, 370], "size": [130, 50] },
+
+    { "id": "bd", "type": "database", "label": "Base de Datos", "sublabel": "Persistencia relacional", "brand": "postgresql", "pos": [700, 205], "size": [140, 58] },
+
+    { "id": "erp", "type": "external", "label": "Sistema ERP", "sublabel": "Stock corporativo", "pos": [920, 50], "size": [140, 52] },
+    { "id": "pasarela_pago", "type": "external", "label": "Pasarela de Pago", "sublabel": "Transacciones", "pos": [920, 370], "size": [140, 52] },
+    { "id": "servicio_envio", "type": "external", "label": "Servicio de Envío", "sublabel": "Logística y guías", "pos": [920, 455], "size": [140, 52] }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Módulos de Negocio y Persistencia",
+      "wraps": ["mod_catalogo", "mod_sellers", "mod_usuarios", "mod_carrito", "mod_pedidos", "bd"]
+    }
+  ],
+  "connections": [
+    { "id": "c-cli-web", "from": "clientes", "to": "web_app", "label": "HTTPS", "variant": "emphasis" },
+    { "id": "c-sel-web", "from": "sellers", "to": "web_app" },
+    { "id": "c-adm-web", "from": "admin", "to": "web_app" },
+
+    { "id": "c-web-cat", "from": "web_app", "to": "mod_catalogo", "variant": "emphasis" },
+    { "id": "c-web-sel", "from": "web_app", "to": "mod_sellers" },
+    { "id": "c-web-usr", "from": "web_app", "to": "mod_usuarios" },
+    { "id": "c-web-car", "from": "web_app", "to": "mod_carrito" },
+    { "id": "c-web-ped", "from": "web_app", "to": "mod_pedidos" },
+
+    { "id": "c-cat-bd", "from": "mod_catalogo", "to": "bd" },
+    { "id": "c-sel-bd", "from": "mod_sellers", "to": "bd" },
+    { "id": "c-usr-bd", "from": "mod_usuarios", "to": "bd" },
+    { "id": "c-car-bd", "from": "mod_carrito", "to": "bd" },
+    { "id": "c-ped-bd", "from": "mod_pedidos", "to": "bd" },
+
+    { "id": "c-cat-erp", "from": "mod_catalogo", "to": "erp", "label": "sincronizar" },
+    { "id": "c-ped-pago", "from": "mod_pedidos", "to": "pasarela_pago", "label": "pago", "variant": "security" },
+    { "id": "c-ped-env", "from": "mod_pedidos", "to": "servicio_envio" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Presentación & API",
+      "items": [
+        "Frontend Web SPA y API REST unificada para Clientes, Sellers y Administración"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lógica de Negocio",
+      "items": [
+        "Módulos desacoplados: Catálogo, Sellers, Usuarios, Carrito y Pedidos"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Datos & Externos",
+      "items": [
+        "Base de datos PostgreSQL e integraciones con ERP, Pasarela de Pago y Envíos"
+      ]
+    }
+  ]
+}
