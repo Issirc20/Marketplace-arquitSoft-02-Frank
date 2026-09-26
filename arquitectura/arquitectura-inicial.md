@@ -107,9 +107,11 @@ Se ha integrado el agente **Archify** para generar un diagrama de arquitectura i
 
 ### Vista previa del diagrama
 
-| Modo Claro | Modo Oscuro |
-|---|---|
-| ![Diagrama en modo claro](file:///d:/ArqSoftware/Marketplace-arquitSoft-02-Frank/arquitectura/arquitectura-inicial.visual-check.1440x900.light.png) | ![Diagrama en modo oscuro](file:///d:/ArqSoftware/Marketplace-arquitSoft-02-Frank/arquitectura/arquitectura-inicial.visual-check.1440x900.dark.png) |
+
+![Diagrama en modo claro](file:///d:/ArqSoftware/Marketplace-arquitSoft-02-Frank/arquitectura/arquitectura-inicial.visual-check.1440x900.light.png) 
+
+
+![Diagrama en modo oscuro](file:///d:/ArqSoftware/Marketplace-arquitSoft-02-Frank/arquitectura/arquitectura-inicial.visual-check.1440x900.dark.png)
 
 ### Capacidades interactivas disponibles en el visor
 1. **Vistas guiadas (*Guided Views*):**
