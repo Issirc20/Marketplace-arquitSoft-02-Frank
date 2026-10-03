@@ -18,126 +18,154 @@ Este documento define el patrón y enfoque arquitectónico adoptado para la apli
 
 ## 2. Diagrama de Clean Architecture en Marketplace Web
 
-El siguiente diagrama detalla la organización concéntrica en capas, el flujo de ejecución, la inversión de dependencias y la integración externa con el backend monolítico modular:
+flowchart LR
 
-```mermaid
-flowchart TD
-%% ==========================================
+%% =========================================================
+%% CLEAN ARCHITECTURE - MARKETPLACE WEB
+%% Coherente con la arquitectura detallada del proyecto
+%% =========================================================
+
+%% -------------------------
 %% ACTOR
-%% ==========================================
-subgraph ACTOR["Actor"]
-    User["Usuario<br/><i>(Cliente)</i>"]
-end
+%% -------------------------
+User["👤 Usuario<br/><i>Cliente</i>"]
 
-%% ==========================================
-%% APLICACIÓN ANGULAR
-%% ==========================================
-subgraph APP["«aplicación» Marketplace Web [Angular 18 · TypeScript]  src/app/"]
+%% =========================================================
+%% MARKETPLACE WEB
+%% =========================================================
+subgraph APP["«aplicación» Marketplace Web — Angular 18 · TypeScript"]
 
-    subgraph ADAPTADORES["ADAPTADORES Y FRAMEWORKS — dependen de Angular, HttpClient, RxJS"]
+    direction LR
 
-        %% ----------------------------------
-        %% PRESENTACIÓN
-        %% ----------------------------------
-        subgraph PRESENTACION["PRESENTACIÓN<br/><i>src/app/presentacion/</i>"]
-            CatalogoComp["«componente»<br/><b>CatalogoComponent</b><br/>lista y filtra productos"]
-            EstadoCarrito["«servicio de estado»<br/><b>EstadoCarrito</b><br/>signals · sin reglas"]
-            CarritoComp["«componente»<br/><b>CarritoComponent</b><br/>resumen y confirmar compra"]
-            AppComp["«componente»<br/><b>AppComponent</b><br/>shell de la aplicación"]
-        end
+    %% -------------------------
+    %% PRESENTACIÓN
+    %% -------------------------
+    subgraph PRESENTACION["PRESENTACIÓN<br/>src/app/presentacion/"]
+        direction TB
 
-        %% ----------------------------------
-        %% APLICACIÓN (Casos de uso)
-        %% ----------------------------------
-        subgraph APLICACION["APLICACIÓN — casos de uso<br/><i>src/app/aplicacion/</i>"]
-            CasoCat["«caso de uso»<br/><b>ConsultarCatalogoCasoUso</b><br/>ejecutar()"]
-            CasoAddCarr["«caso de uso»<br/><b>AgregarAlCarritoCasoUso</b><br/>ejecutar()"]
-            CasoRegCompra["«caso de uso»<br/><b>RegistrarCompraCasoUso</b><br/>ejecutar()"]
-        end
-
-        %% ----------------------------------
-        %% DOMINIO (Núcleo)
-        %% ----------------------------------
-        subgraph DOMINIO["DOMINIO — núcleo  src/app/dominio/<br/><i>TypeScript puro: sin imports de Angular, HttpClient ni RxJS.<br/>Se verifica sin navegador con npm run pruebas.</i>"]
-            
-            subgraph Modelos["Modelos (entidades y reglas)"]
-                Prod["«entidad»<br/><b>Producto</b><br/>stock, categoría, precio"]
-                Carr["«entidad»<br/><b>Carrito</b><br/>inmutable · subtotal, total"]
-                Ped["«entidad»<br/><b>Pedido</b><br/>estados · cancelación"]
-                Precios["«reglas»<br/><b>precios.ts</b><br/>comisión 10% - IGV 18%"]
-            end
-
-            subgraph Contratos["Contratos (puertos)"]
-                IRepoProd["«interface»<br/><b>RepositorioProductos</b>"]
-                IRepoPed["«interface»<br/><b>RepositorioPedidos</b>"]
-                IProcPagos["«interface»<br/><b>ProcesadorPagos</b>"]
-                INotif["«interface»<br/><b>NotificadorCliente</b>"]
-            end
-        end
-
-        %% ----------------------------------
-        %% INFRAESTRUCTURA
-        %% ----------------------------------
-        subgraph INFRAESTRUCTURA["INFRAESTRUCTURA<br/><i>src/app/infraestructura/</i>"]
-            AdapRepoProd["«adaptador»<br/><b>RepositorioProductosMemoria</b><br/><b>RepositorioProductosHttp</b>"]
-            AdapRepoPed["«adaptador»<br/><b>RepositorioPedidosMemoria</b>"]
-            AdapProcPagos["«adaptador»<br/><b>ProcesadorPagosSimulado</b><br/><b>ProcesadorPagosNiubiz</b>"]
-            AdapNotif["«adaptador»<br/><b>NotificadorConsola</b><br/><b>NotificadorWhatsApp</b>"]
-            TokensDI["«Angular DI»<br/><b>tokens.ts</b><br/>InjectionToken por contrato"]
-        end
-
+        Catalogo["«componente»<br/><b>CatalogoComponent</b>"]
+        Estado["«servicio de estado»<br/><b>EstadoCarrito</b>"]
+        Carrito["«componente»<br/><b>CarritoComponent</b>"]
+        AppComp["«componente»<br/><b>AppComponent</b>"]
     end
 
-    %% ----------------------------------
-    %% RAÍZ DE COMPOSICIÓN
-    %% ----------------------------------
-    RaizComp["«raíz de composición»<br/><b>app.config.ts</b><br/>único archivo que elige qué adaptador cumple cada contrato (useFactory + InjectionToken) y lo inyecta en los casos de uso"]
+    %% -------------------------
+    %% APLICACIÓN
+    %% -------------------------
+    subgraph APLICACION["APLICACIÓN<br/>src/app/aplicacion/"]
+        direction TB
 
-    TokensDI -.->|registra| RaizComp
+        Consultar["«caso de uso»<br/><b>ConsultarCatalogoCasoUso</b>"]
+        Agregar["«caso de uso»<br/><b>AgregarAlCarritoCasoUso</b>"]
+        Registrar["«caso de uso»<br/><b>RegistrarCompraCasoUso</b>"]
+    end
+
+    %% -------------------------
+    %% DOMINIO
+    %% -------------------------
+    subgraph DOMINIO["DOMINIO — NÚCLEO<br/>src/app/dominio/"]
+        direction TB
+
+        subgraph ENTIDADES["Entidades y reglas"]
+            Producto["«entidad»<br/><b>Producto</b>"]
+            CarritoDom["«entidad»<br/><b>Carrito</b>"]
+            Pedido["«entidad»<br/><b>Pedido</b>"]
+            Precios["«reglas»<br/><b>precios.ts</b>"]
+        end
+
+        subgraph CONTRATOS["Contratos / Puertos"]
+            RepoProductos["«interface»<br/><b>RepositorioProductos</b>"]
+            RepoPedidos["«interface»<br/><b>RepositorioPedidos</b>"]
+            ProcesadorPagos["«interface»<br/><b>ProcesadorPagos</b>"]
+            Notificador["«interface»<br/><b>NotificadorCliente</b>"]
+        end
+    end
+
+    %% -------------------------
+    %% INFRAESTRUCTURA
+    %% -------------------------
+    subgraph INFRA["INFRAESTRUCTURA<br/>src/app/infraestructura/"]
+        direction TB
+
+        RepoAdapter["«adaptador»<br/><b>Repositorios</b><br/>Memoria · HTTP"]
+
+        PagoAdapter["«adaptador»<br/><b>Procesadores de pago</b><br/>Simulado · Niubiz"]
+
+        NotifAdapter["«adaptador»<br/><b>Notificadores</b><br/>Consola · WhatsApp"]
+
+        DI["«Angular DI»<br/><b>tokens.ts</b>"]
+    end
 
 end
 
-%% ==========================================
-%% SISTEMA EXTERNO (BACKEND)
-%% ==========================================
-subgraph BACKEND["«sistema externo»<br/><b>Marketplace API REST</b><br/>Backend Node.js · monolito modular"]
-    API["/api/productos<br/>/api/pedidos<br/>/api/authorization<br/>/api/mensajes<br/><br/><i>Se integra con Niubiz y WhatsApp;<br/>las credenciales viven solo aquí.</i>"]
+%% =========================================================
+%% SISTEMA EXTERNO
+%% =========================================================
+
+subgraph EXTERNO["SISTEMA EXTERNO"]
+    API["«API REST»<br/><b>Marketplace API</b><br/>Backend Node.js<br/><br/>/api/productos<br/>/api/pedidos<br/>/api/authorization<br/>/api/mensajes"]
 end
 
-%% ==========================================
-%% RELACIONES Y FLUJO
-%% ==========================================
-User -->|navegador| PRESENTACION
+%% =========================================================
+%% FLUJO PRINCIPAL
+%% =========================================================
 
-CatalogoComp -->|invoca| CasoCat
-CarritoComp -->|invoca| CasoAddCarr
-CarritoComp -->|invoca| CasoRegCompra
+User -->|"interactúa"| PRESENTACION
 
-EstadoCarrito -.->|depende de| Carr
+PRESENTACION -->|"invoca"| APLICACION
 
-CasoCat -->|usa| IRepoProd
-CasoCat -->|usa| Prod
-CasoAddCarr -->|usa| Carr
-CasoAddCarr -->|usa| Prod
-CasoRegCompra -->|usa| IRepoPed
-CasoRegCompra -->|usa| IProcPagos
-CasoRegCompra -->|usa| INotif
-CasoRegCompra -->|usa| Ped
-CasoRegCompra -->|usa| Precios
+APLICACION -->|"utiliza entidades<br/>y contratos"| DOMINIO
 
-%% Inversión de dependencias (Implementación de contratos)
-AdapRepoProd -.->|implementa| IRepoProd
-AdapRepoPed -.->|implementa| IRepoPed
-AdapProcPagos -.->|implementa| IProcPagos
-AdapNotif -.->|implementa| INotif
+%% =========================================================
+%% INVERSIÓN DE DEPENDENCIAS
+%% Infraestructura depende de abstracciones del dominio
+%% =========================================================
 
-%% Comunicación HTTP hacia Backend
-AdapRepoProd -->|HTTP / JSON| API
-AdapProcPagos -->|HTTP / JSON| API
-AdapNotif -->|HTTP / JSON| API
-```
+INFRA -.->|"implementa<br/>contratos"| DOMINIO
 
----
+%% =========================================================
+%% COMUNICACIÓN EXTERNA
+%% =========================================================
+
+INFRA -->|"HTTP / JSON"| API
+
+%% =========================================================
+%% ESTILOS
+%% =========================================================
+
+style APP fill:#f8f8f8,stroke:#555555,stroke-width:2px
+
+style PRESENTACION fill:#dcecff,stroke:#4f8edc,stroke-width:2px
+style APLICACION fill:#e5f4df,stroke:#67a95b,stroke-width:2px
+style DOMINIO fill:#fff1c9,stroke:#e3a72f,stroke-width:3px
+style INFRA fill:#eee1f6,stroke:#9b64bd,stroke-width:2px
+style EXTERNO fill:#eeeeee,stroke:#666666,stroke-width:2px
+
+style Catalogo fill:#ffffff,stroke:#4f8edc
+style Estado fill:#ffffff,stroke:#4f8edc
+style Carrito fill:#ffffff,stroke:#4f8edc
+style AppComp fill:#ffffff,stroke:#4f8edc
+
+style Consultar fill:#ffffff,stroke:#67a95b
+style Agregar fill:#ffffff,stroke:#67a95b
+style Registrar fill:#ffffff,stroke:#67a95b
+
+style Producto fill:#ffffff,stroke:#e3a72f
+style CarritoDom fill:#ffffff,stroke:#e3a72f
+style Pedido fill:#ffffff,stroke:#e3a72f
+style Precios fill:#ffffff,stroke:#e3a72f
+
+style RepoProductos fill:#ffffff,stroke:#e3a72f
+style RepoPedidos fill:#ffffff,stroke:#e3a72f
+style ProcesadorPagos fill:#ffffff,stroke:#e3a72f
+style Notificador fill:#ffffff,stroke:#e3a72f
+
+style RepoAdapter fill:#ffffff,stroke:#9b64bd
+style PagoAdapter fill:#ffffff,stroke:#9b64bd
+style NotifAdapter fill:#ffffff,stroke:#9b64bd
+style DI fill:#ffffff,stroke:#9b64bd
+
+style API fill:#ffffff,stroke:#666666
 
 ## 3. Descripción de las Capas de la Arquitectura
 
