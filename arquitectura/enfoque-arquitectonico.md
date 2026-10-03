@@ -17,7 +17,7 @@ Este documento define el patrón y enfoque arquitectónico adoptado para la apli
 ---
 
 ## 2. Diagrama de Clean Architecture en Marketplace Web
-
+```mermaid
 flowchart LR
 
 %% =========================================================
@@ -166,6 +166,7 @@ style NotifAdapter fill:#ffffff,stroke:#9b64bd
 style DI fill:#ffffff,stroke:#9b64bd
 
 style API fill:#ffffff,stroke:#666666
+```
 
 ## 3. Descripción de las Capas de la Arquitectura
 
